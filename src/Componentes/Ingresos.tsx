@@ -8,18 +8,18 @@ import {
 } from "recharts";
 
 const data = [
-  { mes: "Enero", ganancia: 11000 },
-  { mes: "Febrero", ganancia: 7500 },
-  { mes: "Marzo", ganancia: 7700 },
-  { mes: "Abril", ganancia: 11500 },
-  { mes: "Mayo", ganancia: 11400 },
-  { mes: "Junio", ganancia: 7800 },
-  { mes: "Julio", ganancia: 7900 },
-  { mes: "Agosto", ganancia: 10000 },
-  { mes: "Septiembre", ganancia: 8200 },
-  { mes: "Octubre", ganancia: 8100 },
-  { mes: "Noviembre", ganancia: 9900 },
-  { mes: "Diciembre", ganancia: 8500 },
+  { mes: "Enero", ganancia: 1100 },
+  { mes: "Febrero", ganancia: 750 },
+  { mes: "Marzo", ganancia: 780 },
+  { mes: "Abril", ganancia: 1860 },
+  { mes: "Mayo", ganancia: 1560 },
+  { mes: "Junio", ganancia: 780 },
+  { mes: "Julio", ganancia: 790 },
+  { mes: "Agosto", ganancia: 1050 },
+  { mes: "Septiembre", ganancia: 820 },
+  { mes: "Octubre", ganancia: 810 },
+  { mes: "Noviembre", ganancia: 910 },
+  { mes: "Diciembre", ganancia: 450 },
 ];
 
 export default function IngresosMensuales() {

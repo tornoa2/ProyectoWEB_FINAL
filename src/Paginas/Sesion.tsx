@@ -62,7 +62,7 @@ const IniciarSesion = () => {
                             type="button"
                             className="btn btn-danger mx-auto p-2"
                         >
-                            Los datos ingresados son incorrectos
+                            
                         </button>
                     )
                 }
