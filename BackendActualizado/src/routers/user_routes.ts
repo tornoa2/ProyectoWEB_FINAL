@@ -7,7 +7,7 @@ const UserRoutes = () => {
     router.get("/all", async (req: Request, resp: Response) => {
         const prisma = new PrismaClient()
         try {
-            const usuarios = await prisma.videogame.findMany()
+            const usuarios = await prisma.game.findMany()
             resp.status(200).json(usuarios)
         }catch(error) {
             console.error(error)

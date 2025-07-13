@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GameCard2 from "../Componentes/GameCard";
 import NavBar from "../Componentes/BarraNavegacion";
 import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ListaGames } from "../Utils/ListaJuegos";
+// import { ListaGames } from "../Utils/ListaJuegos";
 import CarouselBestSellers from "../Componentes/CarruselSeller";
 
 export default function BestSellers() {
@@ -12,6 +12,15 @@ export default function BestSellers() {
     description: string;
     image?: string;
   }>(null);
+
+  const [juegos, setJuegos] = useState<any[]>([]);  // Si tienes un tipo `Game`, úsalo aquí
+
+  useEffect(() => {
+    fetch("http://localhost:5000/games/")
+      .then((res) => res.json())
+      .then((data) => setJuegos(data))
+      .catch((err) => console.error("Error al obtener juegos:", err));
+  }, []);
 
   return (
     <>
@@ -30,16 +39,17 @@ export default function BestSellers() {
 
           <div className="container text-center">
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-              {ListaGames.map((game) => (
+              {juegos.map((game) => (
                 <GameCard2
                   id={game.id}
-                  key={game.titulo}
+                  key={game.id}
                   titulo={game.titulo}
                   description={game.description}
                   image={game.image}
                   videoURL={game.videoURL}
-                  detalleImagenes={game.detalleImagenes} 
-                  precio={game.precio}                />
+                  detalleImagenes={game.detalleImagenes}
+                  precio={game.precio}
+                />
               ))}
             </div>
           </div>
@@ -87,17 +97,6 @@ export default function BestSellers() {
               <p>{juegoSeleccionado.description}</p>
             </div>
 
-            {/* Calificación del juego */}
-            <div className="mb-3">
-              <p className="mb-1">Calificación:</p>
-              <p>⭐⭐⭐⭐☆</p>
-              <div className="row">
-                <Button variant="success" className="col btn btn-success ms-4 me-4">
-                  👍 Buen Juego
-                </Button>
-                <Button variant="danger" className="col me-auto">👎 Mal Juego</Button>
-              </div>
-            </div>
           </Modal.Body>
 
           <Modal.Footer className="bg-dark">

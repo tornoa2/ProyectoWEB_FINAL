@@ -5,6 +5,9 @@ import cors from "cors"
 import AdminRoutes from "./routers/admin_routes"
 import UserRoutes from "./routers/user_routes"
 import VideogameRoutes from "./routers/videogame_routes"
+import CategoryRoutes from "./routers/categories_routes";
+import PlatformRoutes from "./routers/platforms_routes";
+import noticiasRouter from "./routers/news_routes";
 
 dotenv.config()
 const PORT = process.env.PORT
@@ -22,7 +25,10 @@ app.get("/", (req: Request, resp: Response) => {
 
 app.use("/admin", AdminRoutes())
 app.use("/user", UserRoutes())
-app.use("/videogame", VideogameRoutes())
+app.use("/games", VideogameRoutes())
+app.use("/categorias", CategoryRoutes());
+app.use("/plataformas", PlatformRoutes());
+app.use("/news", noticiasRouter);
 
 app.listen(PORT, () => {
     console.log(`Se inicio servidor en el puerto ${PORT}`)

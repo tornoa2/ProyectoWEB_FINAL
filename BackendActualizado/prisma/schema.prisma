@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("URL")
+  url = env("DATABASE_URL")
 }
 
 model Admin {
@@ -23,23 +23,66 @@ model Usuario {
   password String
 }
 
-model Videogame {
-  id Int @id @default(autoincrement())
-  name String @unique
-  description String
-  stock Int
-  platform Int
-  type Int
-  ofert Boolean
-  price Float
-  rate Float
-  releaseDate String
-  categoryId Int
-  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+model Game {
+  id              Int         @id @default(autoincrement())
+  titulo          String
+  description     String
+  releaseDate     DateTime
+  precio          Float
+  descuento       Float?      @default(0)
+  esta_oferta     Boolean?    @default(false)
+  videoURL        String
+  image           String
+  detalleImagenes String[]
+  rating          Float?
+  stock 		  Int
+  categoria_id    Int
+  estado          Boolean?    @default(true)
+  categoria       Category    @relation(fields: [categoria_id], references: [id])
+  plataformas     PlatformOnGame[]
+  ventas          Sale[]
+}
+
+model Platform {
+  id        Int               @id @default(autoincrement())
+  nombre    String
+  juegos    PlatformOnGame[]
+}
+
+model PlatformOnGame {
+  gameId     Int
+  platformId Int
+
+  game       Game      @relation(fields: [gameId], references: [id])
+  platform   Platform  @relation(fields: [platformId], references: [id])
+
+  @@id([gameId, platformId])
 }
 
 model Category {
-  id Int @id @default(autoincrement())
-  name String
-  games Videogame[]
+  id      Int     @id @default(autoincrement())
+  nombre  String
+  juegos  Game[]
+}
+
+model News {
+  id                Int       @id @default(autoincrement())
+  titulo            String
+  subtitulo         String?
+  cuerpo            String
+  imagenPrincipal   String?
+  fecha_publicacion DateTime?
+  activo            Boolean   @default(true)
+}
+
+model Sale {
+  id            Int      @id @default(autoincrement())
+  fecha         DateTime @default(now())
+  usuario_id    Int
+  juego_id      Int
+  codigo        String
+  monto_pagado  Float
+
+  juego         Game     @relation(fields: [juego_id], references: [id])
 }

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
 
 import "../Estilos/Table.css";
 
-import { ListaGames } from "../Utils/ListaJuegos";
+// import { ListaGames } from "../Utils/ListaJuegos";
 import type { Game } from "../Tipos/Game";
 import ModalAgregar from "./Agregar";
 import ModalEliminar from "./Eliminar";
@@ -15,7 +15,10 @@ export const Table = () => {
   const cerrarModal = () => setModalAbierto(false);
 
   const [modalAbierto2, setModalAbierto2] = useState(false);
-  const abrirModal2 = () => setModalAbierto2(true);
+  const abrirModal2 = (id: number) => {
+    setIdJuegoAEliminar(id);
+    setModalAbierto2(true);
+  };
   const cerrarModal2 = () => setModalAbierto2(false);
 
   const [modalAbierto3, setModalAbierto3] = useState(false);
@@ -25,6 +28,24 @@ export const Table = () => {
     setModalAbierto3(true);
   };
   const cerrarModal3 = () => setModalAbierto3(false);
+
+  const [idJuegoAEliminar, setIdJuegoAEliminar] = useState<number | null>(null);
+
+  const [juegos, setJuegos] = useState<Game[]>([]);
+
+  const fetchGames = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/games/");
+      const data = await response.json();
+      setJuegos(data);
+    } catch (error) {
+      console.error("Error al obtener juegos:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGames();
+  }, []);
 
   return (
     <div className="table-wrapper">
@@ -38,7 +59,7 @@ export const Table = () => {
         </button>
 
         {modalAbierto && (
-          <ModalAgregar show={modalAbierto} onHide={cerrarModal} />
+          <ModalAgregar show={modalAbierto} onHide={cerrarModal} fetchGames={fetchGames} />
         )}
       </div>
 
@@ -55,27 +76,17 @@ export const Table = () => {
           </tr>
         </thead>
         <tbody>
-          {ListaGames.map((juego: Game) => (
+          {juegos.map((juego: Game, index: number) => (
             <tr key={juego.id}>
-              <td>{juego.id}</td>
+              <td>{index + 1}</td>
               <td className="expandesque">{juego.titulo}</td>
               <td>{juego.categoria?.nombre ?? "-"}</td>
               <td>{juego.precio}</td>
-              <td>0</td>
-              <td>{juego.precio}</td>
+              <td>{juego.descuento ?? 0}</td>
+              <td>{(juego.precio - (juego.precio * (juego.descuento ?? 0) / 100)).toFixed(2)}</td>
               <td className="fit">
                 <span className="actions">
-                  <BsFillTrashFill
-                    className="delete-btn"
-                    onClick={abrirModal2}
-                  />
-                  {modalAbierto2 && (
-                    <ModalEliminar
-                      show={modalAbierto2}
-                      onHide={cerrarModal2}
-                      id={juego.id}
-                    />
-                  )}
+                  <BsFillTrashFill className="delete-btn" onClick={() => abrirModal2(Number(juego.id))} />
 
                   <BsFillPencilFill
                     className="edit-btn"
@@ -86,6 +97,7 @@ export const Table = () => {
                       show={modalAbierto3}
                       onHide={cerrarModal3}
                       juego={juegoSeleccionado}
+                      fetchGames={fetchGames}
                     />
                   )}
                 </span>
@@ -93,6 +105,14 @@ export const Table = () => {
             </tr>
           ))}
         </tbody>
+        {modalAbierto2 && idJuegoAEliminar !== null && (
+          <ModalEliminar
+            show={modalAbierto2}
+            onHide={cerrarModal2}
+            id={idJuegoAEliminar}
+            fetchGames={fetchGames}
+          />
+        )}
       </table>
     </div>
   );
