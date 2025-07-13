@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("URL")
+}
+
+model Admin {
+  id Int @id @default(autoincrement())
+  username String
+  email String @unique
+  password String
+}
+
+model Usuario {
+  id Int @id @default(autoincrement())
+  username String
+  email String @unique
+  password String
+}
+
+model Videogame {
+  id Int @id @default(autoincrement())
+  name String @unique
+  description String
+  stock Int
+  platform Int
+  type Int
+  ofert Boolean
+  price Float
+  rate Float
+  releaseDate String
+  categoryId Int
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String
+  games Videogame[]
+}
